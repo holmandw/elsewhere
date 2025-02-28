@@ -21,6 +21,24 @@ Options:
 ```
 
 
+## Build or Install
+
+Building with `cargo` is the currently supported build method. If you do not have `cargo` installed,
+checkout [rustup.rs](https://rustup.rs/). After installing rust, you can clone this project and build it:
+
+```bash
+$ git clone git@github.com:holmandw/elsewhere.git
+$ cd elsewhere
+# to run without installing
+$ cargo run -- --help
+# displays currently configured users
+# otherwise, install it with
+$ cargo install --path .
+# then it can be used from anywhere in your terminal like
+$ ew --help
+```
+
+
 ## Example Usage:
 
 ```
