@@ -7,14 +7,21 @@ use clap::{arg, Command};
 use dirs::home_dir;
 use serde::{Deserialize, Serialize};
 
-#[derive(Serialize, Deserialize, Debug)]
+static CONFIG_FILENAME: &'static str = ".ew.toml";
+static DEFAULT_STRFTIME: &'static str = "%H:%M %z    %a %b %d %Y";
+
+#[derive(Serialize, Deserialize, Debug, Clone)]
 struct Config {
     person: Vec<Person>,
+    date_fmt: Option<String>,
 }
 
 impl Config {
     fn empty() -> Config {
-        Config { person: Vec::new() }
+        Config {
+            person: Vec::new(),
+            date_fmt: Some(DEFAULT_STRFTIME.into()),
+        }
     }
 
     /// Either get the contents of a config or create an empty config.
@@ -30,17 +37,20 @@ impl Config {
                 }
             }
             Ok(false) => {
-                fs::write(&pb, b"").unwrap();
-                Config::empty()
+                println!("writing default config to `{}`!", pb.display());
+                let config = Config::empty();
+                let s: String = toml::to_string(&config).unwrap();
+                fs::write(&pb, s).unwrap();
+                config
             }
             Err(err) => panic!("{err}"),
         }
     }
 
     fn sorted(&self) -> Self {
-        let mut copy = self.person.clone();
-        copy.sort_by(|p1, p2| p1.name.cmp(&p2.name));
-        Config { person: copy }
+        let mut copy = self.clone();
+        copy.person.sort_by(|p1, p2| p1.name.cmp(&p2.name));
+        copy
     }
 
     fn add(&mut self, p: Person, sort: bool) {
@@ -51,7 +61,11 @@ impl Config {
     }
 
     fn remove(&mut self, name: &str, sort: bool) {
-        if let Some(idx) = self.person.iter().position(|p| p.name == name) {
+        if let Some(idx) = self
+            .person
+            .iter()
+            .position(|p| p.name.to_lowercase() == name.to_lowercase())
+        {
             self.person.swap_remove(idx);
         }
         if sort {
@@ -74,8 +88,6 @@ impl Person {
         }
     }
 }
-
-static CONFIG_FILENAME: &'static str = ".ew.toml";
 
 fn get_pb() -> PathBuf {
     [home_dir().unwrap(), CONFIG_FILENAME.into()]
@@ -113,10 +125,14 @@ fn run() {
         println!("no entries!");
         return;
     }
+    let fmt = config.date_fmt.unwrap_or((&DEFAULT_STRFTIME).to_string());
     config.person.iter().for_each(|p| {
-        let tz: Tz = p.tz.parse().expect("invalid timezone");
-        let now_local = now.with_timezone(&tz).format("%H:%M %z    %a %b %d %Y");
-        println!("{:buff_size$}{}", p.name, now_local);
+        if let Ok::<Tz, _>(tz) = p.tz.parse() {
+            let now_local = now.with_timezone(&tz).format(&fmt);
+            println!("{:buff_size$}{}", p.name, now_local);
+        } else {
+            println!("invalid tz {} for {}", p.tz, p.name);
+        }
     });
 }
 
