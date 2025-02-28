@@ -60,13 +60,13 @@ $ ew add Sara America/Chicago
 $ ew add Joe America/New_York
 $ ew add Addison America/Los_Angeles
 $ ew
-Addison    15:10 -0800	Thu Feb 27 2025
-Joe        18:10 -0500	Thu Feb 27 2025
-Sara       17:10 -0600	Thu Feb 27 2025
+Addison    15:10 -0800    Thu Feb 27 2025
+Joe        18:10 -0500    Thu Feb 27 2025
+Sara       17:10 -0600    Thu Feb 27 2025
 $ ew rm Joe
 $ ew
-Addison    15:10 -0800	Thu Feb 27 2025
-Sara       17:10 -0600	Thu Feb 27 2025
+Addison    15:10 -0800    Thu Feb 27 2025
+Sara       17:10 -0600    Thu Feb 27 2025
 $ cat .ew.toml
 [[person]]
 name = "Addison"
@@ -89,7 +89,8 @@ e.g. `ew add "Bob Belcher" US/Eastern`
 
 # TODO/Ideas
 
-* support different location for toml config file
-* make sorting optional to honor insert order
-* make `strftime` configurable
+* eliminate usage of `unwrap` and `expect`
+* support different location for toml config file. e.g. configurable based on env var
+* make sorting optional to honor insert order, either via config file or env var
+* make `strftime` configurable, either via config file or env var
 

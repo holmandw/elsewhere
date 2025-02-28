@@ -36,6 +36,7 @@ impl Config {
             Err(err) => panic!("{err}"),
         }
     }
+
     fn sorted(&self) -> Self {
         let mut copy = self.person.clone();
         copy.sort_by(|p1, p2| p1.name.cmp(&p2.name));
@@ -112,12 +113,11 @@ fn run() {
         println!("no entries!");
         return;
     }
-    for p in config.person {
-        let n = p.name;
+    config.person.iter().for_each(|p| {
         let tz: Tz = p.tz.parse().expect("invalid timezone");
-        let now_local = now.with_timezone(&tz).format("%H:%M %z\t%a %b %d %Y");
-        println!("{n:buff_size$}{now_local}");
-    }
+        let now_local = now.with_timezone(&tz).format("%H:%M %z    %a %b %d %Y");
+        println!("{:buff_size$}{}", p.name, now_local);
+    });
 }
 
 fn main() {
