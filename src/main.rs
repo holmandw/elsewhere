@@ -138,9 +138,10 @@ fn main() {
         );
     match cmd.get_matches().subcommand() {
         Some(("add", sub_matches)) => {
-            let name = sub_matches.get_one::<String>("name").map(|s| s.as_str());
-            let tz = sub_matches.get_one::<String>("tz").map(|s| s.as_str());
-            name.zip(tz)
+            sub_matches
+                .get_one::<String>("name")
+                .map(|s| s.as_str())
+                .zip(sub_matches.get_one::<String>("tz").map(|s| s.as_str()))
                 .map(|(n, t)| Person::new(n, t))
                 .map(|p| add_person(p, true));
         }
