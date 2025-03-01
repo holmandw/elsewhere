@@ -43,6 +43,7 @@ impl App {
     /// Print out all of the entries. Self is mutably borrowed
     /// so the vector can be sorted if applicable.
     pub fn list(&mut self) {
+        // TODO: return a value, let something else write to stdout
         let now = Utc::now();
         let buff_size = self
             .config
