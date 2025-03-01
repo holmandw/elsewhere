@@ -31,7 +31,7 @@ $ git clone git@github.com:holmandw/elsewhere.git
 $ cd elsewhere
 # to run without installing
 $ cargo run -- --help
-# displays currently configured users
+# displays usage
 # otherwise, install it with
 $ cargo install --path .
 # then it can be used from anywhere in your terminal like
