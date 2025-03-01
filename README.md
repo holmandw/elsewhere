@@ -31,7 +31,7 @@ $ git clone git@github.com:holmandw/elsewhere.git
 $ cd elsewhere
 # to run without installing
 $ cargo run -- --help
-# displays currently configured users
+# displays usage
 # otherwise, install it with
 $ cargo install --path .
 # then it can be used from anywhere in your terminal like
@@ -93,4 +93,12 @@ e.g. `ew add "Bob Belcher" US/Eastern`
 * support different location for toml config file. e.g. configurable based on env var
 * make sorting optional to honor insert order, either via config file or env var
 * make `strftime` configurable, either via config file or env var
+* validate timezones when created with `add`
 
+
+# Issues
+
+Create an issue if there is a problem not listed in TODO/ideas.
+Feel free to fork this repository and open a pr for any GitHub issue
+I have tagged or TODO above. Please no sweeping refactorings, since
+this is starting as a project to learn rust.
