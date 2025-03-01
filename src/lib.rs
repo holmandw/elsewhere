@@ -15,7 +15,8 @@ pub struct App {
 }
 
 impl App {
-    /// Creates a default `App` instance with
+    /// Creates a new `App` instance with either
+    /// the values stored in the config file or
     /// the default file location and config values.
     /// If it doesn't exist, this creates a file at
     /// `$HOME/.ew.toml` and populates default values.
@@ -31,14 +32,12 @@ impl App {
     /// Add a new person to the config.
     pub fn add(&mut self, p: Person) {
         self.config.add(p);
-        let toml_s = toml::to_string(&self.config).unwrap();
-        fs::write(&self.config_file, toml_s).unwrap();
+        self.write();
     }
 
     pub fn rm(&mut self, name: &str) {
         self.config.remove(name);
-        let toml_s = toml::to_string(&self.config).unwrap();
-        fs::write(&self.config_file, toml_s).unwrap();
+        self.write();
     }
 
     /// Print out all of the entries. Self is mutably borrowed
@@ -78,6 +77,10 @@ impl App {
         });
     }
 
+    fn write(&self) {
+        self.config.write(&self.config_file);
+    }
+
     fn get_default_pb() -> PathBuf {
         [home_dir().unwrap(), CONFIG_FILENAME.into()]
             .iter()
@@ -101,6 +104,10 @@ impl TomlConfig {
         }
     }
 
+    pub fn write(&self, pb: &PathBuf) {
+        let toml_s = toml::to_string(&self).unwrap();
+        fs::write(&pb, toml_s).unwrap();
+    }
     /// Either get the contents of a config or create an empty config.
     pub fn get_or_create(pb: &PathBuf) -> TomlConfig {
         match fs::exists(&pb) {
