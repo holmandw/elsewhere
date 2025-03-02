@@ -1,3 +1,7 @@
+> [!WARNING]
+> This repo has been moved to [Codeberg](https://codeberg.org/holmandw/elsewhere).
+
+
 # elsewhere
 
 Keep track of the current time where other folks are
